@@ -56,6 +56,15 @@ func (l *Lexer) nextToken() *token.Token {
     }
     return &token.Token { Kind: "IntConst", IntValue: intValue }
 
+  case l.read('*'):
+    return &token.Token { Kind: "*" }
+
+  case l.read('/'):
+    return &token.Token { Kind: "/" }
+
+  case l.read('%'):
+    return &token.Token { Kind: "%" }
+
   case l.read('+'):
     return &token.Token { Kind: "+" }
 

@@ -32,5 +32,13 @@ example '11 + 22' 33
 example '25 - 13' 12
 example '11 + 18 - 7 + 5' 27
 
+example '5 * 8' 40
+example '48 / 16' 3
+example '55 / 8' 6
+example '55 % 8' 7
+example '15 * 3 / 9 % 3' 2
+
+example '2 * 3 - 1 * 4' 2
+
 echo 'OK'
 exit 0

@@ -47,25 +47,57 @@ func (p *Parser) parsePrimaryExpr() node.Expr {
   }
 }
 
-func (p *Parser) parseAddExpr() node.Expr {
+func (p *Parser) parseMulExpr() node.Expr {
   expr := p.parsePrimaryExpr()
 
+LOOP:
+  for {
+    switch {
+    case p.read("*"):
+      expr = &node.MulExpr {
+        Lhs: expr,
+        Rhs: p.parsePrimaryExpr(),
+      }
+    case p.read("/"):
+      expr = &node.DivExpr {
+        Lhs: expr,
+        Rhs: p.parsePrimaryExpr(),
+      }
+    case p.read("%"):
+      expr = &node.ModExpr {
+        Lhs: expr,
+        Rhs: p.parsePrimaryExpr(),
+      }
+    default:
+      break LOOP
+    }
+  }
+
+  return expr
+}
+
+func (p *Parser) parseAddExpr() node.Expr {
+  expr := p.parseMulExpr()
+
+LOOP:
   for {
     switch {
     case p.read("+"):
       expr = &node.AddExpr {
         Lhs: expr,
-        Rhs: p.parsePrimaryExpr(),
+        Rhs: p.parseMulExpr(),
       }
     case p.read("-"):
       expr = &node.SubExpr {
         Lhs: expr,
-        Rhs: p.parsePrimaryExpr(),
+        Rhs: p.parseMulExpr(),
       }
     default:
-      return expr
+      break LOOP
     }
   }
+
+  return expr
 }
 
 func (p *Parser) parseExpr() node.Expr {

@@ -1,7 +1,7 @@
 all:
 	make skgo
 
-skgo: main.go
+skgo: token/*.go node/*.go lexer/*.go parser/*.go main.go
 	go build -o skgo main.go
 
 .PHONY: test
