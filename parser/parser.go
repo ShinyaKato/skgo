@@ -24,8 +24,8 @@ func (p *Parser) next() *token.Token {
   return token
 }
 
-func (p *Parser) read(kind string) bool {
-  if p.tokens[p.pos].Kind == kind {
+func (p *Parser) read(tokenType token.TokenType) bool {
+  if p.tokens[p.pos].Type == tokenType {
     p.pos++
     return true
   }
@@ -34,16 +34,16 @@ func (p *Parser) read(kind string) bool {
 }
 
 func (p *Parser) parsePrimaryExpr() node.Expr {
-  token := p.next()
+  t := p.next()
 
-  switch token.Kind {
-  case "IntConst":
+  switch t.Type {
+  case token.INT_CONST:
     return &node.IntConstExpr {
-      IntValue: token.IntValue,
+      IntValue: t.IntValue,
     }
 
   default:
-    panic(fmt.Sprintf("invalid primary expression: %s.", token.Kind))
+    panic(fmt.Sprintf("invalid primary expression: %s.", t.Type))
   }
 }
 
@@ -107,7 +107,7 @@ func (p *Parser) parseExpr() node.Expr {
 func (p *Parser) Parse() node.Expr {
   expr := p.parseExpr()
 
-  if p.peek().Kind != "EndOfFile" {
+  if p.peek().Type != token.EOF {
     panic("invalid expression")
   }
 

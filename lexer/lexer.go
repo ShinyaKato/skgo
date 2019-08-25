@@ -41,35 +41,35 @@ func (l *Lexer) read(c rune) bool {
 func (l *Lexer) nextToken() *token.Token {
   switch {
   case !l.hasNext():
-    return &token.Token { Kind: "EndOfFile" }
+    return &token.Token { Type: token.EOF }
 
   case unicode.IsSpace(l.peek()):
     for l.hasNext() && unicode.IsSpace(l.peek()) {
       l.next()
     }
-    return &token.Token { Kind: "Space" }
+    return &token.Token { Type: token.SPACE }
 
   case unicode.IsDigit(l.peek()):
     intValue := 0
     for l.hasNext() && unicode.IsDigit(l.peek()) {
       intValue = intValue * 10 + int(l.next() - '0')
     }
-    return &token.Token { Kind: "IntConst", IntValue: intValue }
+    return &token.Token { Type: token.INT_CONST, IntValue: intValue }
 
   case l.read('*'):
-    return &token.Token { Kind: "*" }
+    return &token.Token { Type: "*" }
 
   case l.read('/'):
-    return &token.Token { Kind: "/" }
+    return &token.Token { Type: "/" }
 
   case l.read('%'):
-    return &token.Token { Kind: "%" }
+    return &token.Token { Type: "%" }
 
   case l.read('+'):
-    return &token.Token { Kind: "+" }
+    return &token.Token { Type: "+" }
 
   case l.read('-'):
-    return &token.Token { Kind: "-" }
+    return &token.Token { Type: "-" }
 
   default:
     panic(fmt.Sprintf("tokenize: unexpected character: %c.", l.peek()))
@@ -80,12 +80,12 @@ func (l *Lexer) Tokenize() []*token.Token {
   tokens := []*token.Token {}
 
   for {
-    token := l.nextToken()
-    if token.Kind == "Space" {
+    t := l.nextToken()
+    if t.Type == token.SPACE {
       continue
     }
-    tokens = append(tokens, token)
-    if token.Kind == "EndOfFile" {
+    tokens = append(tokens, t)
+    if t.Type == token.EOF {
       break
     }
   }

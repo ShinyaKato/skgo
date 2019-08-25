@@ -1,6 +1,15 @@
 package token
 
+type TokenType string
+
+const (
+  EOF = "EOF"
+  SPACE = "SPACE"
+
+  INT_CONST = "INT_CONST"
+)
+
 type Token struct {
-  Kind string
+  Type TokenType
   IntValue int
 }
