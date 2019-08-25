@@ -33,6 +33,16 @@ func (p *Parser) read(tokenType token.TokenType) bool {
   return false
 }
 
+func (p *Parser) expect(tokenType token.TokenType) *token.Token {
+  t := p.tokens[p.pos]
+  if t.Type == tokenType {
+    p.pos++
+    return t
+  }
+
+  panic(fmt.Sprintf("%s is expected, but got %s.", tokenType, t.Type))
+}
+
 func (p *Parser) parsePrimaryExpr() node.Expr {
   t := p.next()
 
@@ -41,6 +51,11 @@ func (p *Parser) parsePrimaryExpr() node.Expr {
     return &node.IntConstExpr {
       IntValue: t.IntValue,
     }
+
+  case "(":
+    expr := p.parseExpr()
+    p.expect(")")
+    return expr
 
   default:
     panic(fmt.Sprintf("invalid primary expression: %s.", t.Type))

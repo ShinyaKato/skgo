@@ -49,8 +49,10 @@ example '55 % 8' 7
 example '15 * 3 / 9 % 3' 2
 
 example '2 * 3 - 1 * 4' 2
+example '2 * (3 - 1) * 4' 16
 
 failed_example '123 456'
+failed_example '2 * (3 + 4'
 
 echo 'OK'
 exit 0
