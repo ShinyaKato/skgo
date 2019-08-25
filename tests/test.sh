@@ -24,6 +24,16 @@ example() {
   fi
 }
 
+failed_example() {
+  expr=$1
+
+  ./skgo "$expr" > /dev/null 2> /dev/null
+  if [ $? -eq 0 ]; then
+    echo "NG: unexpectedly succeeded: $expr."
+    exit 1
+  fi
+}
+
 example '42' 42
 example '35' 35
 example '0' 0
@@ -39,6 +49,8 @@ example '55 % 8' 7
 example '15 * 3 / 9 % 3' 2
 
 example '2 * 3 - 1 * 4' 2
+
+failed_example '123 456'
 
 echo 'OK'
 exit 0

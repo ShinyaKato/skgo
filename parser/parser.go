@@ -105,7 +105,13 @@ func (p *Parser) parseExpr() node.Expr {
 }
 
 func (p *Parser) Parse() node.Expr {
-  return p.parseExpr()
+  expr := p.parseExpr()
+
+  if p.peek().Kind != "EndOfFile" {
+    panic("invalid expression")
+  }
+
+  return expr
 }
 
 func New(tokens []*token.Token) *Parser {
