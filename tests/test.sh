@@ -28,5 +28,9 @@ example '42' 42
 example '35' 35
 example '0' 0
 
+example '11 + 22' 33
+example '25 - 13' 12
+example '11 + 18 - 7 + 5' 27
+
 echo 'OK'
 exit 0
