@@ -2,7 +2,7 @@ all:
 	make skgo
 
 skgo: token/*.go node/*.go lexer/*.go parser/*.go main.go
-	go build -o skgo main.go
+	go build -o skgo
 
 .PHONY: test
 test: skgo
@@ -10,4 +10,4 @@ test: skgo
 
 .PHONY: clean
 clean:
-	rm main.go
+	rm skgo
