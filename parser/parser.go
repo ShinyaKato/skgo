@@ -119,14 +119,35 @@ func (p *Parser) parseExpr() node.Expr {
   return p.parseAddExpr()
 }
 
-func (p *Parser) Parse() node.Expr {
-  expr := p.parseExpr()
+func (p *Parser) parseStmt() node.Stmt {
+  return &node.ExprStmt {
+    Expr: p.parseExpr(),
+  }
+}
+
+func (p *Parser) parseBlock() *node.Block {
+  var list = []node.Stmt {}
+
+  p.expect("{")
+  for p.peek().Type != "}" {
+    list = append(list, p.parseStmt())
+    p.expect(";")
+  }
+  p.expect("}")
+
+  return &node.Block {
+    StmtList: list,
+  }
+}
+
+func (p *Parser) Parse() *node.Block {
+  block := p.parseBlock()
 
   if p.peek().Type != token.EOF {
-    panic("invalid expression")
+    panic("invalid block")
   }
 
-  return expr
+  return block
 }
 
 func New(tokens []*token.Token) *Parser {

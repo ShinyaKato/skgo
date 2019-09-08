@@ -1,7 +1,7 @@
 package node
 
 type Expr interface {
-  Generate()
+  GenExpr()
 }
 
 type IntConstExpr struct {
@@ -26,4 +26,16 @@ type AddExpr struct {
 
 type SubExpr struct {
   Lhs, Rhs Expr
+}
+
+type Stmt interface {
+  GenStmt()
+}
+
+type ExprStmt struct {
+  Expr Expr
+}
+
+type Block struct {
+  StmtList []Stmt
 }

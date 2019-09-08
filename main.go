@@ -24,14 +24,13 @@ func getSourceFromArgs() string {
 func main() {
   src := getSourceFromArgs()
   tokens := lexer.New(src).Tokenize()
-  expr := parser.New(tokens).Parse()
+  block := parser.New(tokens).Parse()
 
   fmt.Printf("  .global main\n")
   fmt.Printf("main:\n")
   fmt.Printf("  pushq %%rbp\n")
   fmt.Printf("  movq %%rsp, %%rbp\n")
-  expr.Generate()
-  fmt.Printf("  popq %%rax\n")
+  block.GenBlock()
   fmt.Printf("  leave\n")
   fmt.Printf("  ret\n")
 }

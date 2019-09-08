@@ -4,14 +4,14 @@ import (
   "fmt"
 )
 
-func (e *IntConstExpr) Generate() {
+func (e *IntConstExpr) GenExpr() {
   fmt.Printf("  movl $%d, %%eax\n", e.IntValue)
   fmt.Printf("  pushq %%rax\n")
 }
 
-func (e *MulExpr) Generate() {
-  e.Lhs.Generate()
-  e.Rhs.Generate()
+func (e *MulExpr) GenExpr() {
+  e.Lhs.GenExpr()
+  e.Rhs.GenExpr()
 
   fmt.Printf("  popq %%rcx\n")
   fmt.Printf("  popq %%rax\n")
@@ -19,9 +19,9 @@ func (e *MulExpr) Generate() {
   fmt.Printf("  pushq %%rax\n")
 }
 
-func (e *DivExpr) Generate() {
-  e.Lhs.Generate()
-  e.Rhs.Generate()
+func (e *DivExpr) GenExpr() {
+  e.Lhs.GenExpr()
+  e.Rhs.GenExpr()
 
   fmt.Printf("  popq %%rcx\n")
   fmt.Printf("  popq %%rax\n")
@@ -30,9 +30,9 @@ func (e *DivExpr) Generate() {
   fmt.Printf("  pushq %%rax\n")
 }
 
-func (e *ModExpr) Generate() {
-  e.Lhs.Generate()
-  e.Rhs.Generate()
+func (e *ModExpr) GenExpr() {
+  e.Lhs.GenExpr()
+  e.Rhs.GenExpr()
 
   fmt.Printf("  popq %%rcx\n")
   fmt.Printf("  popq %%rax\n")
@@ -41,9 +41,9 @@ func (e *ModExpr) Generate() {
   fmt.Printf("  pushq %%rdx\n")
 }
 
-func (e *AddExpr) Generate() {
-  e.Lhs.Generate()
-  e.Rhs.Generate()
+func (e *AddExpr) GenExpr() {
+  e.Lhs.GenExpr()
+  e.Rhs.GenExpr()
 
   fmt.Printf("  popq %%rcx\n")
   fmt.Printf("  popq %%rax\n")
@@ -51,12 +51,23 @@ func (e *AddExpr) Generate() {
   fmt.Printf("  pushq %%rax\n")
 }
 
-func (e *SubExpr) Generate() {
-  e.Lhs.Generate()
-  e.Rhs.Generate()
+func (e *SubExpr) GenExpr() {
+  e.Lhs.GenExpr()
+  e.Rhs.GenExpr()
 
   fmt.Printf("  popq %%rcx\n")
   fmt.Printf("  popq %%rax\n")
   fmt.Printf("  subl %%ecx, %%eax\n")
   fmt.Printf("  pushq %%rax\n")
+}
+
+func (s *ExprStmt) GenStmt() {
+  s.Expr.GenExpr()
+  fmt.Printf("  popq %%rax\n")
+}
+
+func (b *Block) GenBlock() {
+  for _, s := range b.StmtList {
+    s.GenStmt()
+  }
 }

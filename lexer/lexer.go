@@ -56,6 +56,12 @@ func (l *Lexer) nextToken() *token.Token {
     }
     return &token.Token { Type: token.INT_CONST, IntValue: intValue }
 
+  case l.read('{'):
+    return &token.Token { Type: "{" }
+
+  case l.read('}'):
+    return &token.Token { Type: "}" }
+
   case l.read('('):
     return &token.Token { Type: "(" }
 
@@ -76,6 +82,9 @@ func (l *Lexer) nextToken() *token.Token {
 
   case l.read('-'):
     return &token.Token { Type: "-" }
+
+  case l.read(';'):
+    return &token.Token { Type: ";" }
 
   default:
     panic(fmt.Sprintf("tokenize: unexpected character: %c.", l.peek()))
