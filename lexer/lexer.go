@@ -56,6 +56,13 @@ func (l *Lexer) nextToken() *token.Token {
     }
     return &token.Token { Type: token.INT_CONST, IntValue: intValue }
 
+  case unicode.IsLetter(l.peek()):
+    ident := ""
+    for l.hasNext() && (unicode.IsLetter(l.peek()) || unicode.IsDigit(l.peek())) {
+      ident += string(l.next())
+    }
+    return &token.Token { Type: token.IDENT, Ident: ident }
+
   case l.read('{'):
     return &token.Token { Type: "{" }
 
@@ -82,6 +89,9 @@ func (l *Lexer) nextToken() *token.Token {
 
   case l.read('-'):
     return &token.Token { Type: "-" }
+
+  case l.read('='):
+    return &token.Token { Type: "=" }
 
   case l.read(';'):
     return &token.Token { Type: ";" }

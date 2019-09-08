@@ -8,6 +8,10 @@ type IntConstExpr struct {
   IntValue int
 }
 
+type IdentExpr struct {
+  Offset int
+}
+
 type MulExpr struct {
   Lhs, Rhs Expr
 }
@@ -34,6 +38,11 @@ type Stmt interface {
 
 type ExprStmt struct {
   Expr Expr
+}
+
+type Assign struct {
+  Lhs *IdentExpr
+  Rhs Expr
 }
 
 type Block struct {

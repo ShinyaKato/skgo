@@ -54,11 +54,15 @@ example '{ 2 * (3 - 1) * 4; }' 16
 example '{ 12; 34; }' 34
 example '{ 1 + 2; 3 * 4; }' 12
 
+example '{ x = 4 * 7; x; }' 28
+example '{ x = 123; y = 100; x - y; }' 23
+
 failed_example '{ 123 456; }'
 failed_example '{ 2 * (3 + 4; }'
 failed_example '123'
 failed_example '{ 123;'
 failed_example '{ 123 }'
+failed_example '{ 123 = 456; }'
 
 echo 'OK'
 exit 0

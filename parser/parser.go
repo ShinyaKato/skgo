@@ -12,6 +12,9 @@ import (
 type Parser struct {
   tokens []*token.Token
   pos int
+
+  variables map[string]int
+  stack int
 }
 
 func (p *Parser) peek() *token.Token {
@@ -43,6 +46,16 @@ func (p *Parser) expect(tokenType token.TokenType) *token.Token {
   panic(fmt.Sprintf("%s is expected, but got %s.", tokenType, t.Type))
 }
 
+func (p *Parser) findOffsetByIdent(ident string) int {
+  if offset, ok := p.variables[ident]; ok {
+    return offset
+  } else {
+    p.stack += 4
+    p.variables[ident] = -p.stack
+    return -p.stack
+  }
+}
+
 func (p *Parser) parsePrimaryExpr() node.Expr {
   t := p.next()
 
@@ -50,6 +63,11 @@ func (p *Parser) parsePrimaryExpr() node.Expr {
   case token.INT_CONST:
     return &node.IntConstExpr {
       IntValue: t.IntValue,
+    }
+
+  case token.IDENT:
+    return &node.IdentExpr {
+      Offset: p.findOffsetByIdent(t.Ident),
     }
 
   case "(":
@@ -120,9 +138,20 @@ func (p *Parser) parseExpr() node.Expr {
 }
 
 func (p *Parser) parseStmt() node.Stmt {
-  return &node.ExprStmt {
-    Expr: p.parseExpr(),
+  expr := p.parseExpr()
+
+  if p.read("=") {
+    if ident, ok := expr.(*node.IdentExpr); ok {
+      return &node.Assign {
+        Lhs: ident,
+        Rhs: p.parseExpr(),
+      }
+    } else {
+      panic("currently, only identifier is supported for left hand side of assignment.")
+    }
   }
+
+  return &node.ExprStmt { Expr: expr }
 }
 
 func (p *Parser) parseBlock() *node.Block {
@@ -140,19 +169,22 @@ func (p *Parser) parseBlock() *node.Block {
   }
 }
 
-func (p *Parser) Parse() *node.Block {
+func (p *Parser) Parse() (*node.Block, int) {
   block := p.parseBlock()
 
   if p.peek().Type != token.EOF {
-    panic("invalid block")
+    panic("invalid program.")
   }
 
-  return block
+  return block, p.stack
 }
 
 func New(tokens []*token.Token) *Parser {
   return &Parser {
     tokens: tokens,
     pos: 0,
+
+    variables: map[string]int {},
+    stack: 0,
   }
 }

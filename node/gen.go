@@ -9,6 +9,11 @@ func (e *IntConstExpr) GenExpr() {
   fmt.Printf("  pushq %%rax\n")
 }
 
+func (e *IdentExpr) GenExpr() {
+  fmt.Printf("  movl %d(%%rbp), %%eax\n", e.Offset)
+  fmt.Printf("  pushq %%rax\n")
+}
+
 func (e *MulExpr) GenExpr() {
   e.Lhs.GenExpr()
   e.Rhs.GenExpr()
@@ -64,6 +69,12 @@ func (e *SubExpr) GenExpr() {
 func (s *ExprStmt) GenStmt() {
   s.Expr.GenExpr()
   fmt.Printf("  popq %%rax\n")
+}
+
+func (s *Assign) GenStmt() {
+  s.Rhs.GenExpr()
+  fmt.Printf("  popq %%rax\n")
+  fmt.Printf("  movl %%eax, %d(%%rbp)\n", s.Lhs.Offset)
 }
 
 func (b *Block) GenBlock() {
