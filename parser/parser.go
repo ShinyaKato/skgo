@@ -46,13 +46,20 @@ func (p *Parser) expect(tokenType token.TokenType) *token.Token {
   panic(fmt.Sprintf("%s is expected, but got %s.", tokenType, t.Type))
 }
 
-func (p *Parser) findOffsetByIdent(ident string) int {
+func (p *Parser) insertVariable(ident string) {
+  if _, ok := p.variables[ident]; !ok {
+    p.stack += 4
+    p.variables[ident] = -p.stack
+  } else {
+    panic(fmt.Sprintf("duplicated variable declaration: %s.", ident))
+  }
+}
+
+func (p *Parser) lookupVariable(ident string) int {
   if offset, ok := p.variables[ident]; ok {
     return offset
   } else {
-    p.stack += 4
-    p.variables[ident] = -p.stack
-    return -p.stack
+    panic(fmt.Sprintf("undefined variable: %s.", ident))
   }
 }
 
@@ -67,7 +74,7 @@ func (p *Parser) parsePrimaryExpr() node.Expr {
 
   case token.IDENT:
     return &node.IdentExpr {
-      Offset: p.findOffsetByIdent(t.Ident),
+      Offset: p.lookupVariable(t.Ident),
     }
 
   case "(":
@@ -138,6 +145,17 @@ func (p *Parser) parseExpr() node.Expr {
 }
 
 func (p *Parser) parseStmt() node.Stmt {
+  if p.read("var") {
+    for {
+      t := p.expect(token.IDENT)
+      p.insertVariable(t.Ident)
+      if !p.read(",") {
+        break
+      }
+    }
+    return nil
+  }
+
   expr := p.parseExpr()
 
   if p.read("=") {
@@ -159,7 +177,10 @@ func (p *Parser) parseBlock() *node.Block {
 
   p.expect("{")
   for p.peek().Type != "}" {
-    list = append(list, p.parseStmt())
+    stmt := p.parseStmt()
+    if stmt != nil {
+      list = append(list, stmt)
+    }
     p.expect(";")
   }
   p.expect("}")

@@ -61,7 +61,12 @@ func (l *Lexer) nextToken() *token.Token {
     for l.hasNext() && (unicode.IsLetter(l.peek()) || unicode.IsDigit(l.peek())) {
       ident += string(l.next())
     }
-    return &token.Token { Type: token.IDENT, Ident: ident }
+    switch ident {
+    case "var":
+      return &token.Token { Type: "var" }
+    default:
+      return &token.Token { Type: token.IDENT, Ident: ident }
+    }
 
   case l.read('{'):
     return &token.Token { Type: "{" }
@@ -95,6 +100,9 @@ func (l *Lexer) nextToken() *token.Token {
 
   case l.read(';'):
     return &token.Token { Type: ";" }
+
+  case l.read(','):
+    return &token.Token { Type: "," }
 
   default:
     panic(fmt.Sprintf("tokenize: unexpected character: %c.", l.peek()))
