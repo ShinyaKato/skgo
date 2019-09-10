@@ -173,7 +173,7 @@ func (p *Parser) parseStmt() node.Stmt {
 }
 
 func (p *Parser) parseBlock() *node.Block {
-  var list = []node.Stmt {}
+  list := []node.Stmt {}
 
   p.expect("{")
   for p.peek().Type != "}" {
@@ -190,22 +190,36 @@ func (p *Parser) parseBlock() *node.Block {
   }
 }
 
-func (p *Parser) Parse() (*node.Block, int) {
-  block := p.parseBlock()
+func (p *Parser) parseFunctionDecl() *node.FunctionDecl {
+  p.variables = map[string]int {}
+  p.stack = 0
+
+  p.expect("func")
+  name := p.expect(token.IDENT).Ident
+  p.expect("(")
+  p.expect(")")
+  body := p.parseBlock()
+
+  return &node.FunctionDecl {
+    Name: name,
+    Body: body,
+    Stack: p.stack,
+  }
+}
+
+func (p *Parser) Parse() *node.FunctionDecl {
+  functionDecl := p.parseFunctionDecl()
 
   if p.peek().Type != token.EOF {
     panic("invalid program.")
   }
 
-  return block, p.stack
+  return functionDecl
 }
 
 func New(tokens []*token.Token) *Parser {
   return &Parser {
     tokens: tokens,
     pos: 0,
-
-    variables: map[string]int {},
-    stack: 0,
   }
 }

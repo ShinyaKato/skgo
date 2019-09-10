@@ -34,37 +34,41 @@ failed_example() {
   fi
 }
 
-example '{ 42; }' 42
-example '{ 35; }' 35
-example '{ 0; }' 0
+example 'func main() { 42; }' 42
+example 'func main() { 35; }' 35
+example 'func main() { 0; }' 0
 
-example '{ 11 + 22; }' 33
-example '{ 25 - 13; }' 12
-example '{ 11 + 18 - 7 + 5; }' 27
+example 'func main() { 11 + 22; }' 33
+example 'func main() { 25 - 13; }' 12
+example 'func main() { 11 + 18 - 7 + 5; }' 27
 
-example '{ 5 * 8; }' 40
-example '{ 48 / 16; }' 3
-example '{ 55 / 8; }' 6
-example '{ 55 % 8; }' 7
-example '{ 15 * 3 / 9 % 3; }' 2
+example 'func main() { 5 * 8; }' 40
+example 'func main() { 48 / 16; }' 3
+example 'func main() { 55 / 8; }' 6
+example 'func main() { 55 % 8; }' 7
+example 'func main() { 15 * 3 / 9 % 3; }' 2
 
-example '{ 2 * 3 - 1 * 4; }' 2
-example '{ 2 * (3 - 1) * 4; }' 16
+example 'func main() { 2 * 3 - 1 * 4; }' 2
+example 'func main() { 2 * (3 - 1) * 4; }' 16
 
-example '{ 12; 34; }' 34
-example '{ 1 + 2; 3 * 4; }' 12
+example 'func main() { 12; 34; }' 34
+example 'func main() { 1 + 2; 3 * 4; }' 12
 
-example '{ var x; x = 4 * 7; x; }' 28
-example '{ var x, y; x = 123; y = 100; x - y; }' 23
+example 'func main() { var x; x = 4 * 7; x; }' 28
+example 'func main() { var x, y; x = 123; y = 100; x - y; }' 23
 
-failed_example '{ 123 456; }'
-failed_example '{ 2 * (3 + 4; }'
-failed_example '123'
-failed_example '{ 123;'
-failed_example '{ 123 }'
-failed_example '{ 123 = 456; }'
-failed_example '{ var x, x; }'
-failed_example '{ x = 123; }'
+failed_example 'func main() { 123 456; }'
+failed_example 'func main() { 2 * (3 + 4; }'
+failed_example 'func main() 123'
+failed_example 'func main() { 123;'
+failed_example 'func main() { 123 }'
+failed_example 'func main() { 123 = 456; }'
+failed_example 'func main() { var x, x; }'
+failed_example 'func main() { x = 123; }'
+failed_example 'func () { 123; }'
+failed_example 'func 123() { 123; }'
+failed_example 'func { 123; }'
+failed_example 'func main { 123; }'
 
 echo 'OK'
 exit 0

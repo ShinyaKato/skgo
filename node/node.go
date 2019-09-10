@@ -48,3 +48,13 @@ type Assign struct {
 type Block struct {
   StmtList []Stmt
 }
+
+type TopLevelDecl interface {
+  GenTopLevelDecl()
+}
+
+type FunctionDecl struct {
+  Name string
+  Body *Block
+  Stack int
+}

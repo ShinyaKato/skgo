@@ -24,14 +24,7 @@ func getSourceFromArgs() string {
 func main() {
   src := getSourceFromArgs()
   tokens := lexer.New(src).Tokenize()
-  block, stack := parser.New(tokens).Parse()
+  functionDecl := parser.New(tokens).Parse()
 
-  fmt.Printf("  .global main\n")
-  fmt.Printf("main:\n")
-  fmt.Printf("  pushq %%rbp\n")
-  fmt.Printf("  movq %%rsp, %%rbp\n")
-  fmt.Printf("  subq $%d, %%rsp\n", stack)
-  block.GenBlock()
-  fmt.Printf("  leave\n")
-  fmt.Printf("  ret\n")
+  functionDecl.GenTopLevelDecl()
 }

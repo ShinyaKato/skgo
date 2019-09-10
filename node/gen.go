@@ -82,3 +82,14 @@ func (b *Block) GenBlock() {
     s.GenStmt()
   }
 }
+
+func (f *FunctionDecl) GenTopLevelDecl() {
+  fmt.Printf("  .global %s\n", f.Name)
+  fmt.Printf("%s:\n", f.Name)
+  fmt.Printf("  pushq %%rbp\n")
+  fmt.Printf("  movq %%rsp, %%rbp\n")
+  fmt.Printf("  subq $%d, %%rsp\n", f.Stack)
+  f.Body.GenBlock()
+  fmt.Printf("  leave\n")
+  fmt.Printf("  ret\n")
+}
