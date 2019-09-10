@@ -93,3 +93,9 @@ func (f *FunctionDecl) GenTopLevelDecl() {
   fmt.Printf("  leave\n")
   fmt.Printf("  ret\n")
 }
+
+func (s *SourceFile) GenSourceFile() {
+  for _, t := range s.TopLevelDecls {
+    t.GenTopLevelDecl()
+  }
+}

@@ -207,14 +207,18 @@ func (p *Parser) parseFunctionDecl() *node.FunctionDecl {
   }
 }
 
-func (p *Parser) Parse() *node.FunctionDecl {
-  functionDecl := p.parseFunctionDecl()
-
-  if p.peek().Type != token.EOF {
-    panic("invalid program.")
+func (p *Parser) Parse() *node.SourceFile {
+  topLevelDecls := []node.TopLevelDecl {}
+  for {
+    if p.peek().Type == token.EOF {
+      break
+    }
+    topLevelDecls = append(topLevelDecls, p.parseFunctionDecl())
   }
 
-  return functionDecl
+  return &node.SourceFile {
+    TopLevelDecls: topLevelDecls,
+  }
 }
 
 func New(tokens []*token.Token) *Parser {

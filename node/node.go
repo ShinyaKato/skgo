@@ -58,3 +58,7 @@ type FunctionDecl struct {
   Body *Block
   Stack int
 }
+
+type SourceFile struct {
+  TopLevelDecls []TopLevelDecl
+}

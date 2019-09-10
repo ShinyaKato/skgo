@@ -24,7 +24,7 @@ func getSourceFromArgs() string {
 func main() {
   src := getSourceFromArgs()
   tokens := lexer.New(src).Tokenize()
-  functionDecl := parser.New(tokens).Parse()
+  sourceFile := parser.New(tokens).Parse()
 
-  functionDecl.GenTopLevelDecl()
+  sourceFile.GenSourceFile()
 }
