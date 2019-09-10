@@ -64,17 +64,22 @@ func (p *Parser) lookupVariable(ident string) int {
 }
 
 func (p *Parser) parsePrimaryExpr() node.Expr {
-  t := p.next()
-
-  switch t.Type {
+  switch t := p.next(); t.Type {
   case token.INT_CONST:
     return &node.IntConstExpr {
       IntValue: t.IntValue,
     }
 
   case token.IDENT:
-    return &node.IdentExpr {
-      Offset: p.lookupVariable(t.Ident),
+    if p.read("(") {
+      p.expect(")")
+      return &node.CallExpr {
+        Callee: t.Ident,
+      }
+    } else {
+      return &node.IdentExpr {
+        Offset: p.lookupVariable(t.Ident),
+      }
     }
 
   case "(":

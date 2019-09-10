@@ -12,6 +12,10 @@ type IdentExpr struct {
   Offset int
 }
 
+type CallExpr struct {
+  Callee string
+}
+
 type MulExpr struct {
   Lhs, Rhs Expr
 }

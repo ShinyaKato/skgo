@@ -14,6 +14,15 @@ func (e *IdentExpr) GenExpr() {
   fmt.Printf("  pushq %%rax\n")
 }
 
+func (e *CallExpr) GenExpr() {
+  fmt.Printf("  movq %%rsp, %%rax\n")
+  fmt.Printf("  andq $-0x08, %%rsp\n")
+  fmt.Printf("  pushq %%rax\n")
+  fmt.Printf("  call %s\n", e.Callee)
+  fmt.Printf("  popq %%rsp\n")
+  fmt.Printf("  pushq %%rax\n")
+}
+
 func (e *MulExpr) GenExpr() {
   e.Lhs.GenExpr()
   e.Rhs.GenExpr()
@@ -88,7 +97,7 @@ func (f *FunctionDecl) GenTopLevelDecl() {
   fmt.Printf("%s:\n", f.Name)
   fmt.Printf("  pushq %%rbp\n")
   fmt.Printf("  movq %%rsp, %%rbp\n")
-  fmt.Printf("  subq $%d, %%rsp\n", f.Stack)
+  fmt.Printf("  subq $%d, %%rsp\n", (f.Stack + 15) / 16 * 16)
   f.Body.GenBlock()
   fmt.Printf("  leave\n")
   fmt.Printf("  ret\n")

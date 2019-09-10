@@ -57,6 +57,8 @@ example 'func main() { 1 + 2; 3 * 4; }' 12
 example 'func main() { var x; x = 4 * 7; x; }' 28
 example 'func main() { var x, y; x = 123; y = 100; x - y; }' 23
 
+example 'func f() { 42; } func main() { f(); }' 42
+
 failed_example 'func main() { 123 456; }'
 failed_example 'func main() { 2 * (3 + 4; }'
 failed_example 'func main() 123'
