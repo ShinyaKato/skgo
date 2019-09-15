@@ -162,7 +162,8 @@ func (p *Parser) parseExpr() node.Expr {
 }
 
 func (p *Parser) parseStmt() node.Stmt {
-  if p.read("var") {
+  switch {
+  case p.read("var"):
     for {
       t := p.expect(token.IDENT)
       p.insertVariable(t.Ident)
@@ -171,22 +172,29 @@ func (p *Parser) parseStmt() node.Stmt {
       }
     }
     return nil
-  }
 
-  expr := p.parseExpr()
-
-  if p.read("=") {
-    if ident, ok := expr.(*node.IdentExpr); ok {
-      return &node.Assign {
-        Lhs: ident,
-        Rhs: p.parseExpr(),
-      }
-    } else {
-      panic("currently, only identifier is supported for left hand side of assignment.")
+  case p.read("if"):
+    condExpr := p.parseExpr()
+    thenBlock := p.parseBlock()
+    return &node.IfStmt {
+      CondExpr: condExpr,
+      ThenBlock: thenBlock,
     }
-  }
 
-  return &node.ExprStmt { Expr: expr }
+  default:
+    expr := p.parseExpr()
+    if p.read("=") {
+      if ident, ok := expr.(*node.IdentExpr); ok {
+        return &node.Assign {
+          Lhs: ident,
+          Rhs: p.parseExpr(),
+        }
+      } else {
+        panic("currently, only identifier is supported for left hand side of assignment.")
+      }
+    }
+    return &node.ExprStmt { Expr: expr }
+  }
 }
 
 func (p *Parser) parseBlock() *node.Block {

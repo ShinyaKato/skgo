@@ -54,6 +54,11 @@ type Block struct {
   StmtList []Stmt
 }
 
+type IfStmt struct {
+  CondExpr Expr
+  ThenBlock *Block
+}
+
 type TopLevelDecl interface {
   GenTopLevelDecl()
 }

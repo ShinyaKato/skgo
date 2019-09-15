@@ -64,6 +64,8 @@ func (l *Lexer) nextToken() *token.Token {
     switch ident {
     case "var":
       return &token.Token { Type: "var" }
+    case "if":
+      return &token.Token { Type: "if" }
     case "func":
       return &token.Token { Type: "func" }
     default:

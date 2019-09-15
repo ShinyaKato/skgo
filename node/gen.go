@@ -4,6 +4,14 @@ import (
   "fmt"
 )
 
+var nextLabel = 0
+
+func assignLabel() int {
+  label := nextLabel
+  nextLabel++
+  return label
+}
+
 func (e *IntConstExpr) GenExpr() {
   fmt.Printf("  movl $%d, %%eax\n", e.IntValue)
   fmt.Printf("  pushq %%rax\n")
@@ -98,6 +106,16 @@ func (b *Block) GenBlock() {
   for _, s := range b.StmtList {
     s.GenStmt()
   }
+}
+
+func (s *IfStmt) GenStmt() {
+  elseLabel := assignLabel()
+  s.CondExpr.GenExpr()
+  fmt.Printf("  popq %%rax\n")
+  fmt.Printf("  cmpl $0, %%eax\n")
+  fmt.Printf("  je .L%d\n", elseLabel)
+  s.ThenBlock.GenBlock()
+  fmt.Printf(".L%d:\n", elseLabel)
 }
 
 func (f *FunctionDecl) GenTopLevelDecl() {
