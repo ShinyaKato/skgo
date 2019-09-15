@@ -59,6 +59,10 @@ example 'func main() { var x, y; x = 123; y = 100; x - y; }' 23
 
 example 'func f() { 42; } func main() { f(); }' 42
 
+example 'func f(a) { a * a; } func main() { f(7); }' 49
+example 'func f(a, b) { a + b; } func main() { f(4, 7); }' 11
+example 'func f(a, b, c, d, e, f) { a + b + c + d + e + f; } func main() { f(1, 2, 3, 4, 5, 6); }' 21
+
 failed_example 'func main() { 123 456; }'
 failed_example 'func main() { 2 * (3 + 4; }'
 failed_example 'func main() 123'
@@ -71,6 +75,7 @@ failed_example 'func () { 123; }'
 failed_example 'func 123() { 123; }'
 failed_example 'func { 123; }'
 failed_example 'func main { 123; }'
+failed_example 'func f(a, b, c, d, e, f, g) { 42; }'
 
 echo 'OK'
 exit 0

@@ -15,9 +15,17 @@ func (e *IdentExpr) GenExpr() {
 }
 
 func (e *CallExpr) GenExpr() {
+  argRegs := []string { "rdi", "rsi", "rdx", "rcx", "r8", "r9" }
+
   fmt.Printf("  movq %%rsp, %%rax\n")
   fmt.Printf("  andq $-0x08, %%rsp\n")
   fmt.Printf("  pushq %%rax\n")
+  for _, arg := range e.Args {
+    arg.GenExpr()
+  }
+  for i := len(e.Args) - 1; i >= 0; i-- {
+    fmt.Printf("  popq %%%s\n", argRegs[i])
+  }
   fmt.Printf("  call %s\n", e.Callee)
   fmt.Printf("  popq %%rsp\n")
   fmt.Printf("  pushq %%rax\n")
@@ -93,11 +101,16 @@ func (b *Block) GenBlock() {
 }
 
 func (f *FunctionDecl) GenTopLevelDecl() {
+  argRegs := []string { "edi", "esi", "edx", "ecx", "r8d", "r9d" }
+
   fmt.Printf("  .global %s\n", f.Name)
   fmt.Printf("%s:\n", f.Name)
   fmt.Printf("  pushq %%rbp\n")
   fmt.Printf("  movq %%rsp, %%rbp\n")
   fmt.Printf("  subq $%d, %%rsp\n", (f.Stack + 15) / 16 * 16)
+  for i, offset := range f.ParamOffsets {
+    fmt.Printf("  movl %%%s, %d(%%rbp)\n", argRegs[i], offset)
+  }
   f.Body.GenBlock()
   fmt.Printf("  leave\n")
   fmt.Printf("  ret\n")

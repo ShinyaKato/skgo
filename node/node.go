@@ -14,6 +14,7 @@ type IdentExpr struct {
 
 type CallExpr struct {
   Callee string
+  Args []Expr
 }
 
 type MulExpr struct {
@@ -59,6 +60,7 @@ type TopLevelDecl interface {
 
 type FunctionDecl struct {
   Name string
+  ParamOffsets []int
   Body *Block
   Stack int
 }

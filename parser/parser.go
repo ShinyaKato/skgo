@@ -46,10 +46,12 @@ func (p *Parser) expect(tokenType token.TokenType) *token.Token {
   panic(fmt.Sprintf("%s is expected, but got %s.", tokenType, t.Type))
 }
 
-func (p *Parser) insertVariable(ident string) {
+func (p *Parser) insertVariable(ident string) int {
   if _, ok := p.variables[ident]; !ok {
     p.stack += 4
-    p.variables[ident] = -p.stack
+    offset := -p.stack
+    p.variables[ident] = offset
+    return offset
   } else {
     panic(fmt.Sprintf("duplicated variable declaration: %s.", ident))
   }
@@ -72,9 +74,19 @@ func (p *Parser) parsePrimaryExpr() node.Expr {
 
   case token.IDENT:
     if p.read("(") {
+      args := []node.Expr {}
+      if p.peek().Type != ")" {
+        for {
+          args = append(args, p.parseExpr())
+          if !p.read(",") {
+            break
+          }
+        }
+      }
       p.expect(")")
       return &node.CallExpr {
         Callee: t.Ident,
+        Args: args,
       }
     } else {
       return &node.IdentExpr {
@@ -202,11 +214,26 @@ func (p *Parser) parseFunctionDecl() *node.FunctionDecl {
   p.expect("func")
   name := p.expect(token.IDENT).Ident
   p.expect("(")
+  paramOffsets := []int {}
+  if p.peek().Type != ")" {
+    for {
+      param := p.expect(token.IDENT).Ident
+      paramOffsets = append(paramOffsets, p.insertVariable(param))
+      if !p.read(",") {
+        break
+      }
+    }
+  }
   p.expect(")")
   body := p.parseBlock()
 
+  if len(paramOffsets) > 6 {
+    panic(fmt.Sprintf("too many parameters: %s", name))
+  }
+
   return &node.FunctionDecl {
     Name: name,
+    ParamOffsets: paramOffsets,
     Body: body,
     Stack: p.stack,
   }
