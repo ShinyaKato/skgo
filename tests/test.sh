@@ -74,6 +74,23 @@ example 'func main() { return !0; }' 1
 example 'func main() { return !1; }' 0
 example 'func main() { return !256; }' 0
 
+example 'func main() { return 3 == 3; }' 1
+example 'func main() { return 3 == 5; }' 0
+example 'func main() { return 3 != 3; }' 0
+example 'func main() { return 3 != 5; }' 1
+example 'func main() { return 3 < 1; }' 0
+example 'func main() { return 3 < 3; }' 0
+example 'func main() { return 3 < 5; }' 1
+example 'func main() { return 3 <= 1; }' 0
+example 'func main() { return 3 <= 3; }' 1
+example 'func main() { return 3 <= 5; }' 1
+example 'func main() { return 3 > 1; }' 1
+example 'func main() { return 3 > 3; }' 0
+example 'func main() { return 3 > 5; }' 0
+example 'func main() { return 3 >= 1; }' 1
+example 'func main() { return 3 >= 3; }' 1
+example 'func main() { return 3 >= 5; }' 0
+
 failed_example 'func main() { 123 456; }'
 failed_example 'func main() { 2 * (3 + 4; }'
 failed_example 'func main() 123'

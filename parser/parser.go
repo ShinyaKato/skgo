@@ -168,8 +168,52 @@ LOOP:
   return expr
 }
 
+func (p *Parser) parseComparisonExpr() node.Expr {
+  expr := p.parseAddExpr()
+
+LOOP:
+  for {
+    switch {
+    case p.read("=="):
+      expr = &node.EqualExpr {
+        Lhs: expr,
+        Rhs: p.parseComparisonExpr(),
+      }
+    case p.read("!="):
+      expr = &node.NotEqualExpr {
+        Lhs: expr,
+        Rhs: p.parseComparisonExpr(),
+      }
+    case p.read("<"):
+      expr = &node.LessExpr {
+        Lhs: expr,
+        Rhs: p.parseComparisonExpr(),
+      }
+    case p.read("<="):
+      expr = &node.LessEqualExpr {
+        Lhs: expr,
+        Rhs: p.parseComparisonExpr(),
+      }
+    case p.read(">"):
+      expr = &node.GreaterExpr {
+        Lhs: expr,
+        Rhs: p.parseComparisonExpr(),
+      }
+    case p.read(">="):
+      expr = &node.GreaterEqualExpr {
+        Lhs: expr,
+        Rhs: p.parseComparisonExpr(),
+      }
+    default:
+      break LOOP
+    }
+  }
+
+  return expr
+}
+
 func (p *Parser) parseExpr() node.Expr {
-  return p.parseAddExpr()
+  return p.parseComparisonExpr()
 }
 
 func (p *Parser) parseStmt() node.Stmt {

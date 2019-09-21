@@ -102,6 +102,78 @@ func (e *SubExpr) GenExpr() {
   fmt.Printf("  pushq %%rax\n")
 }
 
+func (e *EqualExpr) GenExpr() {
+  e.Lhs.GenExpr()
+  e.Rhs.GenExpr()
+
+  fmt.Printf("  popq %%rcx\n")
+  fmt.Printf("  popq %%rax\n")
+  fmt.Printf("  cmpl %%ecx, %%eax\n")
+  fmt.Printf("  sete %%al\n")
+  fmt.Printf("  movzbl %%al, %%eax\n")
+  fmt.Printf("  pushq %%rax\n")
+}
+
+func (e *NotEqualExpr) GenExpr() {
+  e.Lhs.GenExpr()
+  e.Rhs.GenExpr()
+
+  fmt.Printf("  popq %%rcx\n")
+  fmt.Printf("  popq %%rax\n")
+  fmt.Printf("  cmpl %%ecx, %%eax\n")
+  fmt.Printf("  setne %%al\n")
+  fmt.Printf("  movzbl %%al, %%eax\n")
+  fmt.Printf("  pushq %%rax\n")
+}
+
+func (e *LessExpr) GenExpr() {
+  e.Lhs.GenExpr()
+  e.Rhs.GenExpr()
+
+  fmt.Printf("  popq %%rcx\n")
+  fmt.Printf("  popq %%rax\n")
+  fmt.Printf("  cmpl %%ecx, %%eax\n")
+  fmt.Printf("  setl %%al\n")
+  fmt.Printf("  movzbl %%al, %%eax\n")
+  fmt.Printf("  pushq %%rax\n")
+}
+
+func (e *LessEqualExpr) GenExpr() {
+  e.Lhs.GenExpr()
+  e.Rhs.GenExpr()
+
+  fmt.Printf("  popq %%rcx\n")
+  fmt.Printf("  popq %%rax\n")
+  fmt.Printf("  cmpl %%ecx, %%eax\n")
+  fmt.Printf("  setle %%al\n")
+  fmt.Printf("  movzbl %%al, %%eax\n")
+  fmt.Printf("  pushq %%rax\n")
+}
+
+func (e *GreaterExpr) GenExpr() {
+  e.Lhs.GenExpr()
+  e.Rhs.GenExpr()
+
+  fmt.Printf("  popq %%rcx\n")
+  fmt.Printf("  popq %%rax\n")
+  fmt.Printf("  cmpl %%ecx, %%eax\n")
+  fmt.Printf("  setg %%al\n")
+  fmt.Printf("  movzbl %%al, %%eax\n")
+  fmt.Printf("  pushq %%rax\n")
+}
+
+func (e *GreaterEqualExpr) GenExpr() {
+  e.Lhs.GenExpr()
+  e.Rhs.GenExpr()
+
+  fmt.Printf("  popq %%rcx\n")
+  fmt.Printf("  popq %%rax\n")
+  fmt.Printf("  cmpl %%ecx, %%eax\n")
+  fmt.Printf("  setge %%al\n")
+  fmt.Printf("  movzbl %%al, %%eax\n")
+  fmt.Printf("  pushq %%rax\n")
+}
+
 func (s *ExprStmt) GenStmt() {
   s.Expr.GenExpr()
   fmt.Printf("  popq %%rax\n")

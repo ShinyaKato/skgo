@@ -41,6 +41,30 @@ type SubExpr struct {
   Lhs, Rhs Expr
 }
 
+type EqualExpr struct {
+  Lhs, Rhs Expr
+}
+
+type NotEqualExpr struct {
+  Lhs, Rhs Expr
+}
+
+type LessExpr struct {
+  Lhs, Rhs Expr
+}
+
+type LessEqualExpr struct {
+  Lhs, Rhs Expr
+}
+
+type GreaterExpr struct {
+  Lhs, Rhs Expr
+}
+
+type GreaterEqualExpr struct {
+  Lhs, Rhs Expr
+}
+
 type Stmt interface {
   GenStmt()
 }
