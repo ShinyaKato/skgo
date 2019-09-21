@@ -70,6 +70,10 @@ example 'func main() { var x; x = 10; if 1 { x = 20; } else { x = 30; }; x; }' 2
 
 example 'func main() { return 10; return 20; }' 10
 
+example 'func main() { return !0; }' 1
+example 'func main() { return !1; }' 0
+example 'func main() { return !256; }' 0
+
 failed_example 'func main() { 123 456; }'
 failed_example 'func main() { 2 * (3 + 4; }'
 failed_example 'func main() 123'

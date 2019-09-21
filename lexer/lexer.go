@@ -88,6 +88,9 @@ func (l *Lexer) nextToken() *token.Token {
   case l.read(')'):
     return &token.Token { Type: ")" }
 
+  case l.read('!'):
+    return &token.Token { Type: "!" }
+
   case l.read('*'):
     return &token.Token { Type: "*" }
 

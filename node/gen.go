@@ -40,6 +40,16 @@ func (e *CallExpr) GenExpr() {
   fmt.Printf("  pushq %%rax\n")
 }
 
+func (e *NotExpr) GenExpr() {
+  e.Expr.GenExpr()
+
+  fmt.Printf("  popq %%rax\n")
+  fmt.Printf("  cmpl $0, %%eax\n")
+  fmt.Printf("  sete %%al\n")
+  fmt.Printf("  movzbl %%al, %%eax\n")
+  fmt.Printf("  pushq %%rax\n")
+}
+
 func (e *MulExpr) GenExpr() {
   e.Lhs.GenExpr()
   e.Rhs.GenExpr()

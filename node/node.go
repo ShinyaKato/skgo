@@ -17,6 +17,10 @@ type CallExpr struct {
   Args []Expr
 }
 
+type NotExpr struct {
+  Expr Expr
+}
+
 type MulExpr struct {
   Lhs, Rhs Expr
 }

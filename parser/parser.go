@@ -104,8 +104,19 @@ func (p *Parser) parsePrimaryExpr() node.Expr {
   }
 }
 
+func (p *Parser) parseUnaryExpr() node.Expr {
+  switch {
+    case p.read("!"):
+      var expr node.NotExpr
+      expr.Expr = p.parseUnaryExpr()
+      return &expr
+    default:
+      return p.parsePrimaryExpr()
+  }
+}
+
 func (p *Parser) parseMulExpr() node.Expr {
-  expr := p.parsePrimaryExpr()
+  expr := p.parseUnaryExpr()
 
 LOOP:
   for {
@@ -113,17 +124,17 @@ LOOP:
     case p.read("*"):
       expr = &node.MulExpr {
         Lhs: expr,
-        Rhs: p.parsePrimaryExpr(),
+        Rhs: p.parseUnaryExpr(),
       }
     case p.read("/"):
       expr = &node.DivExpr {
         Lhs: expr,
-        Rhs: p.parsePrimaryExpr(),
+        Rhs: p.parseUnaryExpr(),
       }
     case p.read("%"):
       expr = &node.ModExpr {
         Lhs: expr,
-        Rhs: p.parsePrimaryExpr(),
+        Rhs: p.parseUnaryExpr(),
       }
     default:
       break LOOP
