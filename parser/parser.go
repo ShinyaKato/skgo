@@ -173,6 +173,13 @@ func (p *Parser) parseStmt() node.Stmt {
     }
     return nil
 
+  case p.read("return"):
+    var stmt node.ReturnStmt
+    if p.peek().Type != ";" {
+      stmt.ReturnExpr = p.parseExpr()
+    }
+    return &stmt
+
   case p.read("if"):
     var stmt node.IfStmt
     stmt.CondExpr = p.parseExpr()

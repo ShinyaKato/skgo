@@ -50,6 +50,10 @@ type Assign struct {
   Rhs Expr
 }
 
+type ReturnStmt struct {
+  ReturnExpr Expr
+}
+
 type Block struct {
   StmtList []Stmt
 }

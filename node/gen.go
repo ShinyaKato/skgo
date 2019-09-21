@@ -5,6 +5,7 @@ import (
 )
 
 var nextLabel = 0
+var returnLabel int
 
 func assignLabel() int {
   label := nextLabel
@@ -102,6 +103,12 @@ func (s *Assign) GenStmt() {
   fmt.Printf("  movl %%eax, %d(%%rbp)\n", s.Lhs.Offset)
 }
 
+func (s *ReturnStmt) GenStmt() {
+  s.ReturnExpr.GenExpr()
+  fmt.Printf("  popq %%rax\n")
+  fmt.Printf("  jmp .L%d\n", returnLabel)
+}
+
 func (b *Block) GenBlock() {
   for _, s := range b.StmtList {
     s.GenStmt()
@@ -127,6 +134,7 @@ func (s *IfStmt) GenStmt() {
 func (f *FunctionDecl) GenTopLevelDecl() {
   argRegs := []string { "edi", "esi", "edx", "ecx", "r8d", "r9d" }
 
+  returnLabel = assignLabel()
   fmt.Printf("  .global %s\n", f.Name)
   fmt.Printf("%s:\n", f.Name)
   fmt.Printf("  pushq %%rbp\n")
@@ -136,6 +144,7 @@ func (f *FunctionDecl) GenTopLevelDecl() {
     fmt.Printf("  movl %%%s, %d(%%rbp)\n", argRegs[i], offset)
   }
   f.Body.GenBlock()
+  fmt.Printf(".L%d:\n", returnLabel)
   fmt.Printf("  leave\n")
   fmt.Printf("  ret\n")
 }
