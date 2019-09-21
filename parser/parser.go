@@ -174,12 +174,13 @@ func (p *Parser) parseStmt() node.Stmt {
     return nil
 
   case p.read("if"):
-    condExpr := p.parseExpr()
-    thenBlock := p.parseBlock()
-    return &node.IfStmt {
-      CondExpr: condExpr,
-      ThenBlock: thenBlock,
+    var stmt node.IfStmt
+    stmt.CondExpr = p.parseExpr()
+    stmt.ThenBlock = p.parseBlock()
+    if p.read("else") {
+      stmt.ElseBlock = p.parseBlock()
     }
+    return &stmt
 
   default:
     expr := p.parseExpr()

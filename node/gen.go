@@ -110,12 +110,18 @@ func (b *Block) GenBlock() {
 
 func (s *IfStmt) GenStmt() {
   elseLabel := assignLabel()
+  endLabel := assignLabel()
   s.CondExpr.GenExpr()
   fmt.Printf("  popq %%rax\n")
   fmt.Printf("  cmpl $0, %%eax\n")
   fmt.Printf("  je .L%d\n", elseLabel)
   s.ThenBlock.GenBlock()
+  fmt.Printf("  jmp .L%d\n", endLabel)
   fmt.Printf(".L%d:\n", elseLabel)
+  if s.ElseBlock != nil {
+    s.ElseBlock.GenBlock()
+  }
+  fmt.Printf(".L%d:\n", endLabel)
 }
 
 func (f *FunctionDecl) GenTopLevelDecl() {

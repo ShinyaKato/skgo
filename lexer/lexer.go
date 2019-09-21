@@ -66,6 +66,8 @@ func (l *Lexer) nextToken() *token.Token {
       return &token.Token { Type: "var" }
     case "if":
       return &token.Token { Type: "if" }
+    case "else":
+      return &token.Token { Type: "else" }
     case "func":
       return &token.Token { Type: "func" }
     default:

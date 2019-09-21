@@ -57,6 +57,7 @@ type Block struct {
 type IfStmt struct {
   CondExpr Expr
   ThenBlock *Block
+  ElseBlock *Block
 }
 
 type TopLevelDecl interface {

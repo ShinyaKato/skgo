@@ -65,6 +65,8 @@ example 'func f(a, b, c, d, e, f) { a + b + c + d + e + f; } func main() { f(1, 
 
 example 'func main() { var x; x = 10; if 0 { x = 20; }; x; }' 10
 example 'func main() { var x; x = 10; if 1 { x = 20; }; x; }' 20
+example 'func main() { var x; x = 10; if 0 { x = 20; } else { x = 30; }; x; }' 30
+example 'func main() { var x; x = 10; if 1 { x = 20; } else { x = 30; }; x; }' 20
 
 failed_example 'func main() { 123 456; }'
 failed_example 'func main() { 2 * (3 + 4; }'
